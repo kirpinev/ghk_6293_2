@@ -4,8 +4,13 @@ import { thxSt } from "./style.css";
 import { appSt } from "../style.css.ts";
 import { ButtonMobile } from "@alfalab/core-components/button/mobile";
 import { Gap } from "@alfalab/core-components/gap";
+import { useEffect } from "react";
 
 export const ThxLayout = () => {
+  useEffect(() => {
+    document.body.style.backgroundColor = "white";
+  }, []);
+
   return (
     <>
       <div className={thxSt.container} style={{ backgroundColor: "white" }}>
