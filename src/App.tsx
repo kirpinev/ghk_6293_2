@@ -63,6 +63,7 @@ import { Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import { sendDataToGA } from "./utils/events.ts";
 
 type BenefitRowProps = {
   iconSrc: string;
@@ -103,20 +104,32 @@ export const App = () => {
   const [price, setPrice] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const handleClickOne = ({ img, price }: { img: string; price: number }) => {
+  const handleClickOne = ({
+    img,
+    price,
+    type,
+  }: {
+    img: string;
+    price: number;
+    type: string;
+  }) => {
     setImg(img);
     setPrice(price);
-    setStep(1);
+    setLoading(true);
+
+    sendDataToGA({ type }).then(() => {
+      setLoading(false);
+      setStep(1);
+    });
   };
 
   const handleClickSubmit = () => {
-    setLoading(true);
-
-    Promise.resolve().then(() => {
-      setLoading(false);
-      LS.setItem(LSKeys.ShowThx, true);
-      setThx(true);
+    window.gtag("event", "6293_get_sub_2", {
+      variant_name: "ghk_6293_2",
     });
+
+    LS.setItem(LSKeys.ShowThx, true);
+    setThx(true);
   };
 
   if (thxShow) {
@@ -274,10 +287,15 @@ export const App = () => {
                       }}
                     >
                       <ButtonMobile
+                        loading={loading}
                         block
                         view="primary"
                         onClick={() =>
-                          handleClickOne({ img: big1, price: 199 })
+                          handleClickOne({
+                            img: big1,
+                            price: 199,
+                            type: "9 привилегий",
+                          })
                         }
                       >
                         Мне подходит
@@ -477,10 +495,15 @@ export const App = () => {
                       }}
                     >
                       <ButtonMobile
+                        loading={loading}
                         block
                         view="primary"
                         onClick={() =>
-                          handleClickOne({ img: big2, price: 399 })
+                          handleClickOne({
+                            img: big2,
+                            price: 399,
+                            type: "15 привилегий",
+                          })
                         }
                       >
                         Мне подходит
@@ -670,10 +693,15 @@ export const App = () => {
                       }}
                     >
                       <ButtonMobile
+                        loading={loading}
                         block
                         view="primary"
                         onClick={() =>
-                          handleClickOne({ img: big3, price: 999 })
+                          handleClickOne({
+                            img: big3,
+                            price: 999,
+                            type: "18 привилегий",
+                          })
                         }
                       >
                         Мне подходит
@@ -724,7 +752,6 @@ export const App = () => {
           <ButtonMobile
             block
             view="primary"
-            loading={loading}
             onClick={() => handleClickSubmit()}
           >
             Перейти
